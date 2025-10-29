@@ -5,30 +5,32 @@ RSpec.describe "Delete chirp", type: :system do
     login
   end
 
-  it "allows user to delete their own chirp" do
+  it "allows users to delete their own chirps", js: true do
     visit root_path
 
+    # Create a chirp
     fill_in "chirp_content", with: "This chirp will be deleted"
     click_button "Chirp!"
 
     expect(page).to have_text("This chirp will be deleted")
 
-    # Accept the confirmation dialog
+    # Delete the chirp
     accept_confirm do
-      click_link "Delete"
+      click_button "Delete", match: :first
     end
 
-    expect(page).not_to have_text("This chirp will be deleted")
+    expect(page).to have_no_text("This chirp will be deleted")
   end
 
-  it "does not show delete link for other users' chirps" do
-    # Create another user and their chirp
-    other_user = User.create!(name: "other_user", password: "password")
+  it "does not show delete button for other users' chirps" do
+    # Create a chirp as the current user
+    other_user = User.create!(name: "other_user", email: "other@example.com", password: "password")
     other_user.chirps.create!(content: "Other user's chirp")
 
     visit root_path
 
-    # The current user should not see a delete link for the other user's chirp
-    expect(page).not_to have_link("Delete")
+    # The current user should not see a delete button for other user's chirps
+    expect(page).to have_text("Other user's chirp")
+    expect(page).to have_no_button("Delete")
   end
 end
