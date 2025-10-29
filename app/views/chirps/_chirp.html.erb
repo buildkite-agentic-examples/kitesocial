@@ -2,5 +2,8 @@
   <p>
     <%= chirp_body(chirp) %><br>
     -- <%= user_link(chirp.author) %>, <time title="<%= chirp.created_at.to_s %>" datetime="<%= chirp.created_at.rfc3339 %>"><%= time(chirp.created_at) %></time>
+    <% if current_user == chirp.author %>
+      | <%= button_to "Delete", chirp_path(chirp), method: :delete, data: { turbo_frame: dom_id(chirp), turbo_confirm: "Are you sure you want to delete this chirp?" }, class: "text-red-600 hover:text-red-800 text-sm" %>
+    <% end %>
   </p>
 <% end %>

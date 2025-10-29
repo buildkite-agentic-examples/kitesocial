@@ -4,6 +4,7 @@ class Chirp < ApplicationRecord
 
   before_create :record_mentions
   after_create :broadcast
+  after_destroy :broadcast_removal
 
   def self.timeline_for(user)
     where(author: user).or(where(author: user.friends)).or(where(id: user.mentions))
@@ -26,6 +27,18 @@ class Chirp < ApplicationRecord
     # Update the timelines of all users who are interested in this chirp
     interested_users.each do |follower|
       broadcast_prepend_later_to ["timeline", follower.id], target: "timeline"
+    end
+  end
+
+  def broadcast_removal
+    broadcast_remove_to "firehose"
+
+    # Remove from the author's page
+    broadcast_remove_to ["chirps", author.id]
+
+    # Remove from the timelines of all users who were interested in this chirp
+    interested_users.each do |follower|
+      broadcast_remove_to ["timeline", follower.id]
     end
   end
 
