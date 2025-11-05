@@ -1,9 +1,10 @@
 # Use Ruby 3.4.1
 FROM ruby:3.4.1
 
-# Install dependencies
+# Install dependencies including Chrome for system tests
 RUN apt-get update -qq && \
-  apt-get install -y nodejs npm sqlite3 build-essential && \
+  apt-get install -y nodejs npm sqlite3 build-essential \
+    chromium chromium-driver && \
   rm -rf /var/lib/apt/lists/*
 
 # Set working directory
