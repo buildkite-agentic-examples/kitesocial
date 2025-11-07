@@ -5,3 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - BUILDKITE_BUILD_ID
+      - BUILDKITE_BUILD_URL
+      - BUILDKITE_BRANCH
+      - BUILDKITE_COMMIT
+      - BUILDKITE_BUILD_NUMBER
+      - BUILDKITE_JOB_ID
+      - BUILDKITE_MESSAGE
