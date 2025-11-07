@@ -1,5 +1,9 @@
 <h2 class="text-2xl font-bold mb-4"><%= @user.name %></h2>
 
+<div class="mb-4 text-gray-600">
+  <%= pluralize(@user.followers.count, 'follower') %>
+</div>
+
 <% unless @user == current_user %>
   <div class="mb-4">
     <% if current_user.following?(@user) %>
