@@ -17,8 +17,10 @@ steps:
           run: app
           config: docker-compose.yml
           mount-buildkite-agent: true
-    agents:
-      queue: default
+          env:
+            - BUILDKITE_ANALYTICS_TOKEN
+    secrets:
+      BUILDKITE_ANALYTICS_TOKEN: KITESOCIAL_ANALYTICS_TOKEN
     env:
       RAILS_ENV: test
     parallelism: 10

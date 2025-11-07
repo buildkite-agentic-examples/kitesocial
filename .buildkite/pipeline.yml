@@ -5,7 +5,9 @@ steps:
       - docker-compose#v5.3.0:
           run: app
           config: docker-compose.yml
-    agents:
-      queue: default
+          env:
+            - BUILDKITE_ANALYTICS_TOKEN
+    secrets:
+      BUILDKITE_ANALYTICS_TOKEN: KITESOCIAL_ANALYTICS_TOKEN
     env:
       RAILS_ENV: test
