@@ -1,0 +1,39 @@
+steps:
+  - label: ":fire: Burning test 1000 times"
+    command: |
+      echo "--- Preparing test database"
+      bundle exec rails db:test:prepare
+
+      echo "--- Running test 100 times in this job"
+      TEST_LOCATION=$$(buildkite-agent meta-data get test_location)
+      echo "Test location: $$TEST_LOCATION"
+
+      FAILED_ITERATIONS=0
+      for i in $$(seq 1 100); do
+        echo "Iteration $$i/100"
+        if ! bundle exec rspec "$$TEST_LOCATION" --format progress; then
+          echo "^^^ +++"
+          echo "Iteration $$i failed"
+          FAILED_ITERATIONS=$$((FAILED_ITERATIONS + 1))
+        fi
+      done
+
+      echo "--- Test burn complete"
+      echo "Failed iterations: $$FAILED_ITERATIONS/100"
+
+      if [ $$FAILED_ITERATIONS -gt 0 ]; then
+        echo "^^^ +++"
+        exit 1
+      fi
+    plugins:
+      - docker-compose#v5.3.0:
+          run: app
+          config: docker-compose.yml
+          mount-buildkite-agent: true
+          env:
+            - BUILDKITE_ANALYTICS_TOKEN
+    secrets:
+      BUILDKITE_ANALYTICS_TOKEN: KITESOCIAL_ANALYTICS_TOKEN
+    env:
+      RAILS_ENV: test
+    parallelism: 10

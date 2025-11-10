@@ -85,6 +85,7 @@ GEM
     brakeman (7.0.2)
       racc
     builder (3.3.0)
+    buildkite-test_collector (2.10.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -349,6 +350,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
+  buildkite-test_collector
   capybara
   debug
   importmap-rails
