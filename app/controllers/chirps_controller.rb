@@ -15,6 +15,16 @@ class ChirpsController < ApplicationController
     end
   end
 
+  def destroy
+    chirp = current_user.chirps.find(params[:id])
+    chirp.destroy!
+
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.turbo_stream { head :ok }
+    end
+  end
+
   private
 
   def chirp_params
